@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Pariwisata Kota Medan</title>
+</head>
+<body>
+    <!-- Header-->
+    <section class="header">
+        <div class="logo">Takash Travel</div>        <nav class="navbar">
+            <a href="home.html">Beranda</a>
+            <a href="price.html">Harga</a>
+            <a href="book.html">Pesan</a>
+        </nav>
+    </section>
+    <!--Form Pemesanan-->
+    <div class="container-table">
+        <h2 class="title">Form Pemesanan Tiket Takash Travel</h2>
+        <form class="form">
+            <table>
+                <tr>
+                    <td class="form-label">
+                        <label for="nama">Nama Lengkap</label>
+                    </td>
+                    <td>
+                        <input type="text" id="nama" class="form-input">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label for="nomor_identitas">Nomor Identitas</label>
+                    </td>
+                    <td>
+                        <input type="text" id="nomor_identitas" class="form-input">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label for="nomor_hp">Nomor HP</label>
+                    </td>
+                    <td>
+                        <input type="text" id="nomor_hp" class="form-input">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label for="tempat_wisata">Tempat Wisata</label>
+                    </td>
+                    <td>
+                        <select id="tempat_wisata" class="form-input">
+                            <option value="0">*Pilih Tempat Wisata*</option>
+                            <option value="5000">Pantai Iboih - Rp 5.000</option>
+                            <option value="15000">Pulau Rubiah - Rp 15.000</option>
+                            <option value="10000">Tugu Nol Kilometer - Rp 10.000</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label for="tanggal">Tanggal Kunjungan</label>
+                    </td>
+                    <td>
+                        <input type="date" id="tanggal" class="form-input">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label for="dewasa">Dewasa</label>
+                    </td>
+                    <td>
+                        <input type="number" id="dewasa" min="0" class="form-input">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label for="anak_anak">Anak-anak (< 12 tahun)</label>
+                    </td>
+                    <td>
+                        <input type="number" id="anak_anak" min="0" class="form-input">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label>Harga Tiket</label>
+                    </td>
+                    <td>
+                        <div id="harga_tiket">Rp 0</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-label">
+                        <label>Total Bayar</label>
+                    </td>
+                    <td>
+                        <div id="harga_bayar">Rp 0</div>
+                    </td>
+                </tr>
+            </table>
+        
+            <div class="checkbox">
+                <input type="checkbox" >Saya dan/atau rombongan telah membaca, memahami, dan setuju berdasarkan syarat dan ketentuan yang telah ditetapkan
+            </div>
+    
+            <div class="btn-wrapper">
+                <button type="button" class="btn-pesan" onclick="hitung_total()">Hitung Total Bayar</button>
+                <button type="button" class="btn-pesan" id="btn-pesan">Pesan Tiket</button>
+                <button type="reset" class="btn-pesan">Cancel</button>
+            </div>
+        </form>
+        <div id="hasil"></div>
+    </div>
+<!-- mengintegrasikan html dengan javascript menggunakan jquery sebagai framework-->
+ <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+    let data = []
+        data['nama'] = ''
+        data['nomor_identitas'] = ''
+        data['nomor_hp'] = ''
+        data['tempat_wisata'] = ''
+        data['harga_tiket'] = $('#tempat_wisata').val()
+        data['tanggal'] = ''
+        data['jumlah_dewasa'] = 0
+        data['jumlah_anak'] = 0
+        data['harga_bayar'] = 0
+
+//menampilkan harga tiket
+$('#tempat_wisata').on('change', function(){
+    data['harga_tiket'] = $('#tempat_wisata').val()
+    data['tempat_wisata'] = $('#tempat_wisata option:selected').text().split(' - ')[0]
+    $('#harga_tiket').text(`Rp ${data['harga_tiket']}`)
+    hitung_total()
+})
+
+//menampilkan total bayar
+    function hitung_total() {
+    data['jumlah_dewasa'] = $('#dewasa').val()
+    data['harga_bayar_dewasa'] = data['jumlah_dewasa'] * data['harga_tiket']
+    $('#harga_bayar').text(`Rp ${data['harga_bayar_dewasa']}`)
+    
+    data['jumlah_anak'] = $('#anak_anak').val()
+    data['harga_bayar_anak'] = data['harga_bayar_dewasa'] + (data['jumlah_anak'] * data['harga_tiket'] * 0.5)
+    $('#harga_bayar').text(`Rp ${data['harga_bayar_anak']}`)
+}
+
+//menampilkan tiket yang dipesan
+$('#btn-pesan').on('click', function(){
+    data['nama'] = $('#nama').val()
+    data['nomor_identitas'] = $('#nomor_identitas').val()
+    data['nomor_hp'] = $('#nomor_hp').val()
+    data['jumlah_dewasa'] = $('#dewasa').val()
+    data['jumlah_anak'] = $('#anak_anak').val()
+
+    $('#hasil').html(`
+    <table>
+            <tr>
+                <td>Nama Pemesan</td>
+                <td>: ${data['nama']}</td>
+            </tr>
+            <tr>
+                <td>Nomor Identitas</td>
+                <td>: ${data['nomor_identitas']}</td>
+            </tr>
+            <tr>
+                <td>No HP</td>
+                <td>: ${data['nomor_hp']}</td>
+            </tr>
+            <tr>
+                <td>Tempat Wisata</td>
+                <td>: ${data['tempat_wisata']}</td>
+            </tr>
+            <tr>
+                <td>Pengujung Dewasa</td>
+                <td>: ${data['jumlah_dewasa']} Orang</td>
+            </tr>
+            <tr>
+                <td>Pengujung Anak-anak</td>
+                <td>: ${data['jumlah_anak']} Orang</td>
+            </tr>
+            <tr>
+                <td>Harga Tiket</td>
+                <td>: Rp ${data['harga_tiket']}</td>
+            </tr>
+            <tr>
+                <td>Total Bayar</td>
+                <td>: Rp ${data['harga_bayar_anak']}</td>
+            </tr>
+        </table>
+    `)
+})
+</script>
+
+<!--Footer-->
+<section class="footer">
+    <div class="box-container">
+        <div class="box">
+            <h3>Link Utama</h3>
+        <a href="home.html"><i class="fas fa-angle-right"></i> Beranda</a>
+        <a href="price.html"><i class="fas fa-angle-right"></i> Daftar Harga</a>
+        <a href="book.html"><i class="fas fa-angle-right"></i> Pesan Tiket</a>
+        </div>
+        <div class="box">
+            <h3>Link Tambahan</h3>
+            <a href="#"><i class="fas fa-angle-right"></i> Semua Pertanyaan</a>
+            <a href="#"><i class="fas fa-angle-right"></i> About Us</a>
+            <a href="#"><i class="fas fa-angle-right"></i> Privacy Policy</a>
+            <a href="#"><i class="fas fa-angle-right"></i> Term Of Use</a>
+        </div>
+        <div class="box">
+            <h3>Info Kontak</h3>
+            <a href="#"><i class="fas fa-phone"></i> +6285296912203</a>
+            <a href="#"><i class="fas fa-envelope"></i> dwikidimas@gmail.com</a>
+            <a href="#"><i class="fas fa-map"></i> Kota Sabang</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>
+
